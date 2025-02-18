@@ -1,66 +1,63 @@
-// src/App.js
 import React, { useEffect, useState } from 'react';
 import { monitorSites } from './api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './App.css'; // Importe o arquivo CSS
+import './App.css';
 import SiteStatus from './components/SiteStatus';
-import { BeatLoader } from 'react-spinners'; // Importe o componente de carregamento
+import { BeatLoader } from 'react-spinners';
 
 function App() {
   const [sitesStatus, setSitesStatus] = useState([]);
-  const [loading, setLoading] = useState(true); // Estado para controlar o carregamento
+  const [loading, setLoading] = useState(true);
 
   const checkSites = async () => {
-    setLoading(true); // Define o estado de carregamento como true
-    const offlineSites = await monitorSites();
-    setSitesStatus(offlineSites);
-    setLoading(false); // Define o estado de carregamento como false
+    setLoading(true);
+    const allSites = await monitorSites(); // Obtém todos os sites
+    setSitesStatus(allSites);
+    setLoading(false);
 
+    // Lógica para toasts (adapte conforme necessário)
+    const offlineSites = allSites.filter(site => !site.online);
     if (offlineSites.length > 0) {
       offlineSites.forEach(site => {
         toast.error(`Site offline: ${site.site} - ${site.message} (Código: ${site.errorCode || 'N/A'})`, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
+          // ... (configuração do toast)
         });
       });
     } else {
       toast.success('Todos os sites estão online!', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
+        // ... (configuração do toast)
       });
     }
   };
 
   useEffect(() => {
-    checkSites(); // Verifica os sites na primeira vez
-    const interval = setInterval(checkSites, 5 * 60 * 1000); // Verifica a cada 5 minutos
-    return () => clearInterval(interval); // Limpa o intervalo quando o componente é desmontado
+    checkSites();
+    const interval = setInterval(checkSites, 5 * 60 * 1000);
+    return () => clearInterval(interval);
   }, []);
+
+  const orderSites = (sites) => {
+    return [...sites].sort((a, b) => b.online - a.online); // Ordena online primeiro
+  };
 
   return (
     <div className="App">
       <header>
+
         <h1>Monitoramento de Sites do CCST/INPE</h1>
+
       </header>
       <main>
-        {loading ? ( // Exibe o indicador de carregamento enquanto loading for true
+        {loading ? (
           <div className="loading">
             <BeatLoader color="#36D7B7" loading={loading} />
             <p>Carregando...</p>
           </div>
         ) : (
           <div className="sites-container">
-            {sitesStatus.map((site, index) => (
-              <SiteStatus key={index} {...site} />
+            {orderSites(sitesStatus).map((site, index) => ( // Ordena e renderiza
+              <SiteStatus key={index} {...site} /> // Passa todos os dados para SiteStatus
             ))}
           </div>
         )}

@@ -28,6 +28,25 @@ main {
   border: 1px solid #ccc;
   padding: 1rem;
   border-radius: 5px;
+  display: flex; /* Adiciona flexbox para alinhar os itens horizontalmente */
+  flex-direction: column; /* Alinha os itens verticalmente (padrão) */
+}
+
+.site-status > div { /* Estilos para o container do indicador e link */
+  display: flex;
+  align-items: center; /* Alinha verticalmente os itens */
+  margin-bottom: 0.5rem; /* Espaçamento abaixo do indicador/link */
+}
+
+.site-status span { /* Estilos para a bolinha */
+  margin-right: 0.5rem; /* Espaçamento entre a bolinha e o link */
+  font-size: 1.2rem; /* Tamanho da bolinha */
+}
+
+.site-status a { /* Estilos para o link do site */
+  color: #007bff;
+  text-decoration: none;
+  word-break: break-all; /* Quebra URLs longas para evitar overflow */
 }
 
 .online {
@@ -43,5 +62,9 @@ main {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 200px; /* Ajuste a altura conforme necessário */
+  height: 200px;
+}
+
+.site-status p { /* Estilos para as mensagens de erro */
+  margin: 0; /* Remove margens padrão de <p> */
 }
