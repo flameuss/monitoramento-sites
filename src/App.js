@@ -8,6 +8,7 @@ import { BeatLoader } from 'react-spinners';
 
 function App() {
   const [sitesStatus, setSitesStatus] = useState([]);
+  const [offlineSites, setOfflineSites] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const checkSites = async () => {
@@ -18,6 +19,32 @@ function App() {
 
       if (Array.isArray(allSites)) {
         setSitesStatus(allSites);
+        const offline = allSites.filter(site => !site.online); // Filtra offlineSites após atualizar sitesStatus
+        setOfflineSites(offline);
+
+        if (offline.length > 0) {
+          offline.forEach(site => {
+            toast.error(`Site offline: ${site.site} - ${site.message} (Código: ${site.errorCode || 'N/A'})`, {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
+          });
+        } else {
+          toast.success('Todos os sites estão online!', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+        }
       } else {
         console.error("Dados da API não estão no formato esperado:", allSites);
         setSitesStatus([]);
@@ -26,22 +53,10 @@ function App() {
     } catch (error) {
       console.error("Erro na chamada à API:", error);
       setSitesStatus([]);
+      setOfflineSites([]);
       toast.error("Erro ao carregar sites. Verifique o console.");
     } finally {
       setLoading(false);
-    }
-
-    const offlineSites = sitesStatus.filter(site => !site.online); // Use sitesStatus aqui
-    if (offlineSites.length > 0) {
-      offlineSites.forEach(site => {
-        toast.error(`Site offline: ${site.site} - ${site.message} (Código: ${site.errorCode || 'N/A'})`, {
-          // ... (configuração do toast)
-        });
-      });
-    } else {
-      toast.success('Todos os sites estão online!', {
-        // ... (configuração do toast)
-      });
     }
   };
 
@@ -68,8 +83,8 @@ function App() {
           </div>
         ) : (
           <div className="sites-container">
-            {orderSites(sitesStatus).map((site, index) => ( // Ordena e renderiza
-              <SiteStatus key={index} {...site} /> // Passa todos os dados para SiteStatus
+            {orderSites(sitesStatus).map((site, index) => (
+              <SiteStatus key={index} {...site} />
             ))}
           </div>
         )}

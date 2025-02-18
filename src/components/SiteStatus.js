@@ -19,7 +19,7 @@ function SiteStatus({ site, status, message, errorCode }) {
         <a href={site} target="_blank" rel="noopener noreferrer">{site}</a>
       </div>
 
-      {!isOnline && ( // Exibe mensagem de erro apenas se offline
+      {!isOnline && (
         <div>
           {message && <p>Mensagem: {message}</p>}
           {errorCode && <p>Código de Erro: {errorCode}</p>}
@@ -29,4 +29,4 @@ function SiteStatus({ site, status, message, errorCode }) {
   );
 }
 
-export default SiteStatus;
+export default SiteStatus
