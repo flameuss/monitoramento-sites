@@ -2,7 +2,8 @@ import axios from 'axios';
 
 export const monitorSites = async () => {
   try {
-    const response = await axios.get('http://localhost:5000/monitor-sites');
+    // const response = await axios.get('http://localhost:5000/monitor-sites');
+    const response = await axios.get('https://servidor-monitoramento.onrender.com/monitor-sites');
     const results = response.data.results;
     const offlineSites = results.filter(result => !result.online).map(result => ({
       site: result.site,
@@ -14,4 +15,4 @@ export const monitorSites = async () => {
     console.error('Erro ao verificar sites:', error);
     return [];
   }
-};
+}  
