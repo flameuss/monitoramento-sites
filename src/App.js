@@ -12,12 +12,26 @@ function App() {
 
   const checkSites = async () => {
     setLoading(true);
-    const response = await monitorSites(); // Obtém a resposta da API
-    const allSites = response.results;      // Acessa o array de sites dentro de "results"
-    setSitesStatus(allSites);
-    setLoading(false);
+    try {
+      const response = await monitorSites();
+      const allSites = response.results || []; // Lida com dados ausentes da API
 
-    const offlineSites = allSites.filter(site => !site.online);
+      if (Array.isArray(allSites)) {
+        setSitesStatus(allSites);
+      } else {
+        console.error("Dados da API não estão no formato esperado:", allSites);
+        setSitesStatus([]);
+        toast.error("Erro ao carregar sites. Verifique o console.");
+      }
+    } catch (error) {
+      console.error("Erro na chamada à API:", error);
+      setSitesStatus([]);
+      toast.error("Erro ao carregar sites. Verifique o console.");
+    } finally {
+      setLoading(false);
+    }
+
+    const offlineSites = sitesStatus.filter(site => !site.online); // Use sitesStatus aqui
     if (offlineSites.length > 0) {
       offlineSites.forEach(site => {
         toast.error(`Site offline: ${site.site} - ${site.message} (Código: ${site.errorCode || 'N/A'})`, {
