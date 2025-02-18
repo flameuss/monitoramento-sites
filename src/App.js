@@ -12,11 +12,11 @@ function App() {
 
   const checkSites = async () => {
     setLoading(true);
-    const allSites = await monitorSites(); // Obtém todos os sites
+    const response = await monitorSites(); // Obtém a resposta da API
+    const allSites = response.results;      // Acessa o array de sites dentro de "results"
     setSitesStatus(allSites);
     setLoading(false);
 
-    // Lógica para toasts (adapte conforme necessário)
     const offlineSites = allSites.filter(site => !site.online);
     if (offlineSites.length > 0) {
       offlineSites.forEach(site => {
@@ -38,15 +38,13 @@ function App() {
   }, []);
 
   const orderSites = (sites) => {
-    return [...sites].sort((a, b) => b.online - a.online); // Ordena online primeiro
+    return [...sites].sort((a, b) => b.online - a.online);
   };
 
   return (
     <div className="App">
       <header>
-
         <h1>Monitoramento de Sites do CCST/INPE</h1>
-
       </header>
       <main>
         {loading ? (
