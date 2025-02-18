@@ -1,0 +1,47 @@
+/* src/App.css */
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: sans-serif;
+}
+
+header {
+  background-color: #007bff;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}
+
+main {
+  padding: 2rem;
+  flex: 1;
+}
+
+.sites-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.site-status {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  border-radius: 5px;
+}
+
+.online {
+  color: green;
+}
+
+.offline {
+  color: red;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px; /* Ajuste a altura conforme necessário */
+}
